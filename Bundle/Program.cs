@@ -67,23 +67,19 @@ namespace Bundle
             // AppConfigから読み込んだKeywordListの数だけループする
             foreach (KeyValuePair<string, string> p in dic)
             {
-                // 出力予定のサブフォルダが無かったら作成する
-                if (!Directory.Exists(output + "\\" + p.Key))
-                    Directory.CreateDirectory(output + "\\" + p.Key);
-
                 try
                 {
                     using (var sr = new StreamReader(p.Value, Encoding.GetEncoding(ConfigurationManager.AppSettings["keywordListEncode"])))
                     {
+                // 出力予定のサブフォルダが無かったら作成する
+                if (!Directory.Exists(output + "\\" + p.Key))
+                    Directory.CreateDirectory(output + "\\" + p.Key);
+
                         // キーワードリストの行数分だけ繰り返す
                         while ((keyword = sr.ReadLine()) != null)
                         {
-                            // 改行の場合
-                            if (keyword.Length == 0)
-                                continue;
-
-                            // 先頭が# の場合はコメント行として無視する
-                            if ("#".Equals(keyword.Substring(0, 1)))
+                            // 改行の場合、または先頭が# の場合（コメント行）は検索を実行しない
+                            if (("#".Equals(keyword.Substring(0, 1))) || (keyword.Length == 0))
                                 continue;
 
                             bool isSuccess = g.doGrep(keyword, fileList, p.Key);
@@ -129,11 +125,16 @@ namespace Bundle
                     // ファイルを繰り返し読み込み、Path部分のみ取得する
                     foreach (var line in File.ReadLines(outputFile))
                     {
+                        // PrimarySearchでPathの後にセパレータとして半角Pipe（|）を出力しているため、それ以前を取得する
                         pathList.Add(line.Substring(0, line.IndexOf("|") - 1));
                     }
                     // 検索対象のファイルリストなので、重複は削除する
                     pathList = pathList.Distinct().ToList();
                 }
+
+                // TODO: 手動GrepのためにPath一覧を出力する
+                //if(bool.Parse(ConfigurationManager.AppSettings["exFileListOutput"]))
+
 
                 string keyword = "";
                 var g = new Grep();
@@ -145,12 +146,8 @@ namespace Bundle
                         // キーワードリストの行数分だけ繰り返す
                         while ((keyword = sr.ReadLine()) != null)
                         {
-                            // 改行の場合
-                            if (keyword.Length == 0)
-                                continue;
-
-                            // 先頭が# の場合はコメント行として無視する
-                            if ("#".Equals(keyword.Substring(0, 1)))
+                            // 改行の場合、または先頭が# の場合（コメント行）は検索を実行しない
+                            if (("#".Equals(keyword.Substring(0, 1))) || (keyword.Length == 0))
                                 continue;
 
                             bool isSuccess = g.doGrep(keyword, pathList.ToArray(), "Dig");
