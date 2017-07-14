@@ -78,6 +78,10 @@ namespace Bundle
                         // キーワードリストの行数分だけ繰り返す
                         while ((keyword = sr.ReadLine()) != null)
                         {
+                            // 改行の場合
+                            if (keyword.Length == 0)
+                                continue;
+
                             // 先頭が# の場合はコメント行として無視する
                             if ("#".Equals(keyword.Substring(0, 1)))
                                 continue;
@@ -141,6 +145,10 @@ namespace Bundle
                         // キーワードリストの行数分だけ繰り返す
                         while ((keyword = sr.ReadLine()) != null)
                         {
+                            // 改行の場合
+                            if (keyword.Length == 0)
+                                continue;
+
                             // 先頭が# の場合はコメント行として無視する
                             if ("#".Equals(keyword.Substring(0, 1)))
                                 continue;
