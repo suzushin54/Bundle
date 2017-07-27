@@ -109,10 +109,6 @@ namespace Bundle
         /// <returns></returns>
         private static bool SecondarySearch(string output)
         {
-            // 出力予定のサブフォルダが無かったら作成する
-            if (!Directory.Exists(output + "\\Dig"))
-                Directory.CreateDirectory(output + "\\Dig");
-
             // Digフォルダを対象に、追加Grep用のファイルを検索する
             foreach (var f in Directory.GetFiles(ConfigurationManager.AppSettings["inputDig"], "*.txt", SearchOption.AllDirectories))
             {
@@ -150,7 +146,11 @@ namespace Bundle
                             if ((keyword.Length == 0) || ("#".Equals(keyword.Substring(0, 1))))
                                 continue;
 
-                            bool isSuccess = g.doGrep(keyword, pathList.ToArray(), "Dig");
+                            // 出力予定のサブフォルダが無かったら作成する
+                            if (!Directory.Exists(output + "\\Dig\\" + System.IO.Path.GetFileName(f)))
+                                Directory.CreateDirectory(output + "\\Dig\\" + System.IO.Path.GetFileName(f));
+
+                            bool isSuccess = g.doGrep(keyword, pathList.ToArray(), "Dig\\" + System.IO.Path.GetFileName(f));
                             // 処理に失敗した場合は抜ける
                             if (!isSuccess)
                             {
