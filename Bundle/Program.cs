@@ -79,7 +79,7 @@ namespace Bundle
                         while ((keyword = sr.ReadLine()) != null)
                         {
                             // 改行の場合、または先頭が# の場合（コメント行）は検索を実行しない
-                            if (("#".Equals(keyword.Substring(0, 1))) || (keyword.Length == 0))
+                            if ((keyword.Length == 0) || ("#".Equals(keyword.Substring(0, 1))))
                                 continue;
 
                             bool isSuccess = g.doGrep(keyword, fileList, p.Key);
@@ -147,7 +147,7 @@ namespace Bundle
                         while ((keyword = sr.ReadLine()) != null)
                         {
                             // 改行の場合、または先頭が# の場合（コメント行）は検索を実行しない
-                            if (("#".Equals(keyword.Substring(0, 1))) || (keyword.Length == 0))
+                            if ((keyword.Length == 0) || ("#".Equals(keyword.Substring(0, 1))))
                                 continue;
 
                             bool isSuccess = g.doGrep(keyword, pathList.ToArray(), "Dig");
